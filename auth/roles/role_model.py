@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship
 
 from ...database import Base
 
@@ -12,8 +13,7 @@ class Role(Base):
   name = Column(String, unique=True, index=True)
   created_at = Column(DateTime, default=datetime.now)
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+  users = relationship("User", back_populates="role")
 
-  class Config:
-    orm_mode = True
 
     

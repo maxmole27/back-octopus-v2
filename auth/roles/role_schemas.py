@@ -1,13 +1,18 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
 class RoleBase(BaseModel):
     name: str
 
-class RoleGet(RoleBase):
+class RoleGet(BaseModel):
     id: int
-    created_at: str
-    updated_at: str
+    name: str
+    created_at: datetime
+    updated_at: datetime
+    class Config:
+        from_attributes = True
 
 class RoleCreate(RoleBase):
     pass
@@ -18,4 +23,4 @@ class RoleUpdate(RoleBase):
 class RoleDelete():
     id: int
     class Config:
-        orm_mode = True
+        from_attributes=True

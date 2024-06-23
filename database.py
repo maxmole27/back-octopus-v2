@@ -7,7 +7,6 @@ DATABASE_URL = "postgresql://octopus_test:octopus_test@localhost/octopus_v2"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-
 def get_db():
     db = SessionLocal()
     try:

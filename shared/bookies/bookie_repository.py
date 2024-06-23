@@ -15,6 +15,12 @@ class BookieRepository:
 
     def get_bookies(self, skip: int = 0, limit: int = 10) -> List[bookie_model.Bookie]:
         return self.db.query(bookie_model.Bookie).offset(skip).limit(limit).all()
+
+    def get_bookies_raw(self) -> List[bookie_model.Bookie]:
+        return self.db.query(bookie_model.Bookie).limit(200).all()
+    
+    def count_bookies(self):
+        return self.db.query(bookie_model.Bookie).count()
     
     def create_bookie(self, bookie: bookie_schemas.BookieCreate) -> bookie_model.Bookie:
         db_bookie = bookie_model.Bookie(name=bookie.name, description=bookie.description)
