@@ -19,6 +19,11 @@ def read_roles(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     bookies = role_repo.get_roles(skip=skip, limit=limit)
     return bookies
 
+@router.get("/{role_id}", response_model=RoleGet)
+def read_role(role_id: int, db: Session = Depends(get_db)):
+    role_repo = RoleRepository(db)
+    return role_repo.get_role(role_id)
+
 @router.post("/", response_model=RoleGet)
 def create_role(role: RoleCreate, db: Session = Depends(get_db)):
     role_repo = RoleRepository(db)
