@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from ...database import get_db
 from .user_repository import UserRepository
-from .user_schemas import UserCreate, UserGet, UserResponse
+from .user_schemas import UserCreate, UserGet, UserLogin, UserResponse
 
 router = APIRouter(
     prefix="/users",
@@ -36,3 +36,8 @@ def read_users_a(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     user_repo = UserRepository(db)
     return user_repo.create_user(user)
+
+@router.post("/login")
+def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
+    user_repo = UserRepository(db)
+    return user_repo.do_login(username=user_login.username, password=user_login.password)

@@ -1,5 +1,6 @@
 from typing import Optional
 
+from ...shared.utils.hash_password import check_password, hash_password
 from .user_model import User
 from .user_schemas import UserCreate, UserGet
 
@@ -16,7 +17,7 @@ class UserRepository:
         return result
     
     def create_user(self, user: UserCreate) -> User:
-        db_user = User(name=user.name, email=user.email, password=user.password, role_id=user.role_id, username=user.username)
+        db_user = User(name=user.name, email=user.email, password=hash_password(user.password), role_id=user.role_id, username=user.username)
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)
@@ -36,3 +37,14 @@ class UserRepository:
     
     def count_users(self):
         return self.db.query(User).count()
+    
+    def do_login(self, username: str, password: str) -> Optional[User]:
+        find_user_by_username: User = self.db.query(User).filter(User.username == username)
+        if not find_user_by_username.first():
+            return None
+        usrname = find_user_by_username.first()
+        print('woooooop')
+        print(usrname.name)
+        if check_password(hashed_password=usrname.password, password=password):
+            return usrname
+        return None

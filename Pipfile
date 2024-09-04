@@ -9,6 +9,8 @@ fastapi = "*"
 sqlalchemy = "*"
 pydantic = "*"
 psycopg2-binary = "*"
+bcrypt = "*"
+python-multipart = "*"
 
 [dev-packages]
 

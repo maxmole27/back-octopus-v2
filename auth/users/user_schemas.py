@@ -41,3 +41,7 @@ class UserResponse(BaseModel):
     data: List[UserGet]
     message: str = None
     code: int = None
+
+class UserLogin(BaseModel):
+    username: str
+    password: str

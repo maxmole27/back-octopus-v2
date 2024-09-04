@@ -8,7 +8,7 @@ class BookieBase(BaseModel):
     name: str
     description: str
 
-class BookieList(BookieBase):
+class BookieGet(BookieBase):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -29,7 +29,7 @@ class BookiesResponse(BaseModel):
     currentPage: int
     totalPages: int
     totalItems: int
-    data: List[BookieList]
+    data: List[BookieGet]
     message: str = None
     code: int = None
     

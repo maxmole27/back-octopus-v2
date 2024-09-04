@@ -8,7 +8,7 @@ class SportBase(BaseModel):
     name: str
     description: str
 
-class SportList(SportBase):
+class SportGet(SportBase):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -29,7 +29,7 @@ class SportsResponse(BaseModel):
     currentPage: int
     totalPages: int
     totalItems: int
-    data: List[SportList]
+    data: List[SportGet]
     message: str = None
     code: int = None
     

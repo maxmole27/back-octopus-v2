@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship
 
 from ...database import Base
 
@@ -13,6 +14,9 @@ class Bookie(Base):
   description = Column(String, nullable=True)
   created_at = Column(DateTime, default=datetime.now)
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+  systems = relationship("System", back_populates="bookie")
+
 
   class Config:
     from_attributes = True

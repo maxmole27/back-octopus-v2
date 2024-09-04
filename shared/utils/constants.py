@@ -1,0 +1,7 @@
+
+# Constants
+# --------
+
+# CUSTOM RESPONSE CODES
+CODE_OK = 200
+CODE_NO_MORE_DATA = 204
