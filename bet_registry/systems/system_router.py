@@ -17,7 +17,7 @@ def read_system(system_id: int, db = Depends(get_db)):
     return system_repo.get_system(system_id)
 
 @router.get("/", response_model=SystemsResponse)
-def read_systems(page: int = 0, limit: int = 3, db = Depends(get_db)):
+def read_systems(page: int = 0, limit: int = 10, db = Depends(get_db)):
     print(page)
     print(limit)
     system_repo = SystemRepository(db)

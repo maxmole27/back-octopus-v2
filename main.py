@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from . import database
 from .auth.roles import role_model, role_router
@@ -20,6 +21,7 @@ system_model.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.mount('/static', StaticFiles(directory='static'), name='static')
 app.include_router(bookie_router.router)
 app.include_router(role_router.router)
 app.include_router(user_router.router)

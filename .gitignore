@@ -68,3 +68,5 @@ dist/
 *.pid.lock
 *.log
 *.tmp
+
+static/
