@@ -11,6 +11,11 @@ pydantic = "*"
 psycopg2-binary = "*"
 bcrypt = "*"
 python-multipart = "*"
+pytesseract = "*"
+pillow = "*"
+load-dotenv = "*"
+python-dotenv = "*"
+openai = "*"
 
 [dev-packages]
 
