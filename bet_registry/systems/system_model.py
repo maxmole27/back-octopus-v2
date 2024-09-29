@@ -26,3 +26,5 @@ class System(Base):
   bookie = relationship("Bookie", back_populates="systems")
   sport = relationship("Sport", back_populates="systems")
   owner = relationship("User", back_populates="systems")
+
+  betslips = relationship("Betslip", back_populates="system")

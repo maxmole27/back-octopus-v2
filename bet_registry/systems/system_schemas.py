@@ -20,8 +20,6 @@ class SystemsBase(BaseModel):
     owner_id: int
 
 
-
-
 class SystemsCreate(SystemsBase):
     pass
 
