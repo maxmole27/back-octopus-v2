@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, String
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from ...database import Base
@@ -11,6 +13,7 @@ class IndividualBetBetslip(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     individual_bet_id = Column(Integer, ForeignKey('individual_bets.id'))
     betslip_id = Column(Integer, ForeignKey('betslips.id'))
+
 
 
 
@@ -35,4 +38,7 @@ class IndividualBet(Base):
     league_or_tournaments = relationship("LeagueOrTournament", back_populates="individual_bets")
 
     odds = Column(Float, nullable=False)
+
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     

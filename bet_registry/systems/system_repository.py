@@ -1,5 +1,11 @@
+from sqlalchemy.orm import joinedload
+
+from ..betslips.betslip_model import Betslip
+from ..betslips.betslip_repository import BetslipRepository
+from ..betslips.betslip_schemas import BetslipsResponse
 from .system_model import System
-from .system_schemas import SystemsCreate, SystemsGet
+from .system_schemas import (SystemGetWithBetslips, SystemsCreate, SystemsGet,
+                             SystemsResponse)
 
 
 class SystemRepository:
@@ -43,3 +49,23 @@ class SystemRepository:
 
   def count_systems(self) -> int:
     return self.db.query(System).count()
+  
+  # def get_systems_by_owner(self, owner_id: int, page: int, limit: int) -> list[SystemsGet]:
+  #   result = self.db.query(System).filter(System.owner_id == owner_id).offset(page*limit).limit(limit).all()
+  #   return result
+  
+  def get_system_with_betslips(self, system_id: int, page: int, limit: int) -> SystemGetWithBetslips:
+      br = BetslipRepository(self.db)
+      system = self.get_system(system_id)
+      betslips = self.db.query(Betslip).filter(Betslip.system_id == system_id).offset(page*limit).limit(limit).all()
+      total_betslips = br.count_betslips(system_id=system_id)
+      return {
+          "system": system,
+          "betslips": BetslipsResponse(
+            currentPage=page,
+            totalPages=total_betslips // limit + 1,
+            totalItems=total_betslips,
+            data=betslips,
+            message="Betslips retrieved successfully",
+            code=200)
+      }

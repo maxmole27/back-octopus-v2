@@ -1,11 +1,12 @@
 
 from typing import List
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from ..individual_bets.individual_bet_model import IndividualBet
+from ..systems.system_model import System
 from .betslip_model import Betslip
-from .betslip_schemas import BetslipCreate
+from .betslip_schemas import BetslipCreate, BetslipsResponse
 
 
 class BetslipRepository:
@@ -25,6 +26,17 @@ class BetslipRepository:
     
     def get_betslips(self, page: int, limit: int) -> List[Betslip]:
         return self.db.query(Betslip).offset(page * limit).limit(limit).all()
+    
+    def get_betslips_by_system_id(self, system_id: int, page: int, limit: int) -> List[BetslipsResponse]:
+        return (
+            self.db.query(Betslip)
+            .join(System)  # Hacemos el JOIN con la tabla System
+            .filter(Betslip.system_id == system_id)  # Filtramos por el ID del sistema
+            .options(joinedload(Betslip.system))  # Utilizamos joinedload para cargar los datos del System
+            .offset(page * limit)
+            .limit(limit)
+            .all()
+        )
     
     def create_betslip(self, betslip: BetslipCreate) -> Betslip:
         db_betslip = Betslip(system_id=betslip.system_id)
@@ -49,5 +61,5 @@ class BetslipRepository:
       
         return betslip
     
-    def count_betslips(self) -> int:
-        return self.db.query(Betslip).count()
+    def count_betslips(self, system_id: int) -> int:
+        return self.db.query(Betslip).filter(Betslip.system_id == system_id).count()

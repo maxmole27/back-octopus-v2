@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from ...auth.users.user_schemas import UserGet
 from ...shared.bookies.bookie_schemas import BookieGet
 from ...shared.sports.sport_schemas import SportGet
+from ..betslips.betslip_schemas import BetslipsResponse
 
 
 class SystemsBase(BaseModel):
@@ -45,3 +46,9 @@ class SystemsResponse(BaseModel):
 
 class SystemDelete(BaseModel):
     id: int
+
+class SystemGetWithBetslips(BaseModel):
+    betslips: BetslipsResponse
+    system: SystemsGet
+    class Config:
+        from_attributes = True  

@@ -3,7 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
-from ..individual_bets.individual_bet_schemas import IndividualBetCreate
+from ..individual_bets.individual_bet_schemas import (IndividualBetCreate,
+                                                      IndividualBetGet)
 
 
 class BetslipBase(BaseModel):
@@ -19,8 +20,7 @@ class BetslipGet(BetslipBase):
     id: int
     created_at: datetime
     updated_at: datetime
-
-    # TODO: Add relationship with system
+    individual_bets: List[IndividualBetGet]
     # TODO: Add relationship with individual bets.
 
     class Config:

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -9,3 +11,11 @@ class IndividualBetCreate(BaseModel):
     bet_status_id: int
     league_or_tournaments_id: int
     odds: float
+
+class IndividualBetGet(IndividualBetCreate):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True

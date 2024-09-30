@@ -76,3 +76,31 @@ def update_betslip(betslip_id: int, betslip: BetslipCreate, db = Depends(get_db)
 def delete_betslip(betslip_id: int, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
     return betslip_repo.delete_betslip(betslip_id)
+
+@router.get("/systems/{system_id}", response_model=BetslipsResponse)
+def read_betslips_by_system_id(system_id: int, page: int = 0, limit: int = 10, db = Depends(get_db)):
+    betslip_repo = BetslipRepository(db)
+    betslips = betslip_repo.get_betslips_by_system_id(system_id, page=page, limit=limit)
+    total = betslip_repo.count_betslips()
+    totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
+    if page+1 > totalPages:
+        response = BetslipsResponse(
+            currentPage=page,
+            totalPages=totalPages,
+            totalItems=total,
+            data=[],
+            message="No more pages",
+            code=CODE_NO_MORE_DATA
+        )
+        return response
+
+    response = BetslipsResponse(
+        currentPage=page,
+        totalPages=totalPages,
+        totalItems=total,
+        data=betslips,
+        message="Betslips retrieved successfully",
+        code=CODE_OK
+    )
+
+    return response
