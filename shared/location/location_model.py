@@ -13,4 +13,4 @@ class Location(Base):
     # Location can be a country, continent, city, etc. So if we need just countries we can filter by is_country
     is_country = Column(Boolean, nullable=False)
 
-    league_or_tournaments = relationship("LeagueOrTournament", back_populates="location")
+    league_or_tournament = relationship("LeagueOrTournament", back_populates="location")

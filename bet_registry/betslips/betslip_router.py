@@ -1,11 +1,14 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic.type_adapter import TypeAdapter
 from sqlalchemy.orm import Session
 
 from ...database import get_db
 from ...shared.utils.constants import CODE_NO_MORE_DATA, CODE_OK
 from ..individual_bets.individual_bet_repository import IndividualBetRepository
 from .betslip_repository import BetslipRepository
-from .betslip_schemas import BetslipCreate, BetslipGet, BetslipsResponse
+from .betslip_schemas import BetslipCreate, BetslipGet, BetslipResponse
 from .betslip_service import BetslipService
 
 router = APIRouter(
@@ -19,14 +22,15 @@ def read_betslip(betslip_id: int, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
     return betslip_repo.get_betslip(betslip_id)
 
-@router.get("/", response_model=BetslipsResponse)
+# Probably this route will be removed. It is not necessary to get all the betslips without a system_id
+@router.get("/", response_model=BetslipResponse)
 def read_betslips(page: int = 0, limit: int = 10, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
     betslips = betslip_repo.get_betslips(page=page, limit=limit)
-    total = betslip_repo.count_betslips()
+    total = betslip_repo.count_betslips(1)
     totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
     if page+1 > totalPages:
-        response = BetslipsResponse(
+        response = BetslipResponse(
             currentPage=page,
             totalPages=totalPages,
             totalItems=total,
@@ -36,7 +40,7 @@ def read_betslips(page: int = 0, limit: int = 10, db = Depends(get_db)):
         )
         return response
 
-    response = BetslipsResponse(
+    response = BetslipResponse(
         currentPage=page,
         totalPages=totalPages,
         totalItems=total,
@@ -77,14 +81,16 @@ def delete_betslip(betslip_id: int, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
     return betslip_repo.delete_betslip(betslip_id)
 
-@router.get("/systems/{system_id}", response_model=BetslipsResponse)
-def read_betslips_by_system_id(system_id: int, page: int = 0, limit: int = 10, db = Depends(get_db)):
+@router.get("/system/{system_id}", response_model=BetslipResponse)
+def read_betslips_from_system(system_id: int, page: int = 0, limit: int = 10, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
-    betslips = betslip_repo.get_betslips_by_system_id(system_id, page=page, limit=limit)
-    total = betslip_repo.count_betslips()
+    betslips = betslip_repo.get_betslips_from_system(system_id, page=page, limit=limit)
+    
+    total = betslip_repo.count_betslips(system_id=system_id)
     totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
+
     if page+1 > totalPages:
-        response = BetslipsResponse(
+        response = BetslipResponse(
             currentPage=page,
             totalPages=totalPages,
             totalItems=total,
@@ -94,7 +100,7 @@ def read_betslips_by_system_id(system_id: int, page: int = 0, limit: int = 10, d
         )
         return response
 
-    response = BetslipsResponse(
+    response = BetslipResponse(
         currentPage=page,
         totalPages=totalPages,
         totalItems=total,
@@ -102,5 +108,7 @@ def read_betslips_by_system_id(system_id: int, page: int = 0, limit: int = 10, d
         message="Betslips retrieved successfully",
         code=CODE_OK
     )
+
+    print(response)
 
     return response

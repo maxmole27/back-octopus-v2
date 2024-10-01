@@ -14,5 +14,5 @@ class PlayerOrTeam(Base):
     sport_id = Column(Integer, ForeignKey('sports.id'))
     sport = relationship("Sport", back_populates="player_or_teams")
 
-    individual_bets1 = relationship("IndividualBet", back_populates="player_or_teams1", foreign_keys='IndividualBet.player_or_teams1_id')
-    individual_bets2 = relationship("IndividualBet", back_populates="player_or_teams2", foreign_keys='IndividualBet.player_or_teams2_id')
+    individual_bets1 = relationship("IndividualBet", back_populates="player_or_team1", foreign_keys='IndividualBet.player_or_team1_id')
+    individual_bets2 = relationship("IndividualBet", back_populates="player_or_team2", foreign_keys='IndividualBet.player_or_team2_id')

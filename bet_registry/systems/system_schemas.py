@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from ...auth.users.user_schemas import UserGet
 from ...shared.bookies.bookie_schemas import BookieGet
 from ...shared.sports.sport_schemas import SportGet
-from ..betslips.betslip_schemas import BetslipsResponse
+from ..betslips.betslip_schemas import BetslipResponse
 
 
 class SystemsBase(BaseModel):
@@ -16,8 +16,8 @@ class SystemsBase(BaseModel):
     is_backtesting: bool
     initial_bankroll: Optional[float]
     stake_by_default: Optional[float]
-    bookie_by_default: int
-    sport_by_default: int
+    bookie_by_default_id: int
+    sport_by_default_id: int
     owner_id: int
 
 
@@ -30,8 +30,8 @@ class SystemsGet(SystemsBase):
     updated_at: datetime
 
     owner: UserGet
-    bookie: BookieGet
-    sport: SportGet
+    bookie_by_default: BookieGet
+    sport_by_default: SportGet
 
     class Config:
         from_attributes = True
@@ -46,9 +46,3 @@ class SystemsResponse(BaseModel):
 
 class SystemDelete(BaseModel):
     id: int
-
-class SystemGetWithBetslips(BaseModel):
-    betslips: BetslipsResponse
-    system: SystemsGet
-    class Config:
-        from_attributes = True  

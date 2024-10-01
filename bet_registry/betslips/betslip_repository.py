@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, joinedload
 from ..individual_bets.individual_bet_model import IndividualBet
 from ..systems.system_model import System
 from .betslip_model import Betslip
-from .betslip_schemas import BetslipCreate, BetslipsResponse
+from .betslip_schemas import BetslipCreate, BetslipGet, BetslipResponse
 
 
 class BetslipRepository:
@@ -27,16 +27,9 @@ class BetslipRepository:
     def get_betslips(self, page: int, limit: int) -> List[Betslip]:
         return self.db.query(Betslip).offset(page * limit).limit(limit).all()
     
-    def get_betslips_by_system_id(self, system_id: int, page: int, limit: int) -> List[BetslipsResponse]:
-        return (
-            self.db.query(Betslip)
-            .join(System)  # Hacemos el JOIN con la tabla System
-            .filter(Betslip.system_id == system_id)  # Filtramos por el ID del sistema
-            .options(joinedload(Betslip.system))  # Utilizamos joinedload para cargar los datos del System
-            .offset(page * limit)
-            .limit(limit)
-            .all()
-        )
+    def get_betslips_from_system(self, system_id: int, page: int, limit: int) -> List[Betslip]:
+        betslips = self.db.query(Betslip).filter(Betslip.system_id == system_id).offset(page*limit).limit(limit).all()
+        return betslips
     
     def create_betslip(self, betslip: BetslipCreate) -> Betslip:
         db_betslip = Betslip(system_id=betslip.system_id)
@@ -51,9 +44,9 @@ class BetslipRepository:
         individual_bet.type_of_bet = "single"
         individual_bet.specific_bet = 1.5
         individual_bet.odds = 2
-        individual_bet.player_or_teams1_id = 1
-        individual_bet.player_or_teams2_id = 2
-        individual_bet.league_or_tournaments_id = 1
+        individual_bet.player_or_team1_id = 1
+        individual_bet.player_or_team2_id = 2
+        individual_bet.league_or_tournament_id = 1
 
         self.db.add(betslip)
         self.db.commit()
@@ -63,3 +56,4 @@ class BetslipRepository:
     
     def count_betslips(self, system_id: int) -> int:
         return self.db.query(Betslip).filter(Betslip.system_id == system_id).count()
+    

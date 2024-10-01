@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from ...database import get_db
 from ...shared.utils.constants import CODE_NO_MORE_DATA, CODE_OK
 from .system_repository import SystemRepository
-from .system_schemas import (SystemGetWithBetslips, SystemsCreate, SystemsGet,
+from .system_schemas import (BetslipResponse, SystemsCreate, SystemsGet,
                              SystemsResponse)
 
 router = APIRouter(
@@ -63,7 +63,7 @@ def delete_system(system_id: int, db = Depends(get_db)):
     res = system_repo.delete_system(system_id)
     return res 
 
-@router.get("/{system_id}/bets", response_model=SystemGetWithBetslips)
+@router.get("/{system_id}/bets", response_model=BetslipResponse)
 def read_system_with_betslips(system_id: int, page: int = 0, limit: int = 10, db = Depends(get_db)):
     system_repo = SystemRepository(db)
     return system_repo.get_system_with_betslips(system_id, page, limit)

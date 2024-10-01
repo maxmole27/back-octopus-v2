@@ -14,19 +14,18 @@ class BetslipCreate(BetslipBase):
     individual_bets: List[IndividualBetCreate]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class BetslipGet(BetslipBase):
     id: int
     created_at: datetime
     updated_at: datetime
     individual_bets: List[IndividualBetGet]
-    # TODO: Add relationship with individual bets.
 
     class Config:
         from_attributes = True
 
-class BetslipsResponse(BaseModel):
+class BetslipResponse(BaseModel):
     currentPage: int
     totalPages: int
     totalItems: int

@@ -43,8 +43,6 @@ class UserRepository:
         if not find_user_by_username.first():
             return None
         usrname = find_user_by_username.first()
-        print('woooooop')
-        print(usrname.name)
         if check_password(hashed_password=usrname.password, password=password):
             return usrname
         return None

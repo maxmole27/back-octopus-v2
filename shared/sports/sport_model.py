@@ -15,8 +15,8 @@ class Sport(Base):
   created_at = Column(DateTime, default=datetime.now)
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-  systems = relationship("System", back_populates="sport")
-  league_or_tournaments = relationship("LeagueOrTournament", back_populates="sport")
+  systems = relationship("System", back_populates="sport_by_default")
+  league_or_tournament = relationship("LeagueOrTournament", back_populates="sport")
   player_or_teams = relationship("PlayerOrTeam", back_populates="sport")
 
 

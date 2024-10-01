@@ -20,11 +20,11 @@ class System(Base):
   created_at = Column(DateTime, default=datetime.now)
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-  bookie_by_default = Column(Integer, ForeignKey('bookies.id'))
-  sport_by_default = Column(Integer, ForeignKey('sports.id'))
+  bookie_by_default_id = Column(Integer, ForeignKey('bookies.id'))
+  sport_by_default_id = Column(Integer, ForeignKey('sports.id'))
   owner_id = Column(Integer, ForeignKey('users.id'))
-  bookie = relationship("Bookie", back_populates="systems")
-  sport = relationship("Sport", back_populates="systems")
+  bookie_by_default = relationship("Bookie", back_populates="systems")
+  sport_by_default = relationship("Sport", back_populates="systems")
   owner = relationship("User", back_populates="systems")
 
   betslips = relationship("Betslip", back_populates="system")
