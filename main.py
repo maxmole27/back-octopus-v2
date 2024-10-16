@@ -14,7 +14,8 @@ from .bet_registry.betslips import betslip_model, betslip_router
 from .bet_registry.individual_bets import individual_bet_model
 from .bet_registry.league_or_tournaments import (league_or_tournament_model,
                                                  league_or_tournament_router)
-from .bet_registry.player_or_teams import player_or_team_model
+from .bet_registry.player_or_teams import (player_or_team_model,
+                                           player_or_team_router)
 from .bet_registry.systems import system_model, system_router
 from .shared.bookies import bookie_model, bookie_router
 from .shared.file_uploader import file_uploader_router
@@ -33,6 +34,8 @@ bet_status_model.Base.metadata.create_all(bind=database.engine)
 league_or_tournament_model.Base.metadata.create_all(bind=database.engine)
 location_model.Base.metadata.create_all(bind=database.engine)
 player_or_team_model.Base.metadata.create_all(bind=database.engine)
+player_or_team_model.Base.metadata.create_all(bind=database.engine)
+
 
 
 
@@ -49,6 +52,7 @@ app.include_router(file_uploader_router.router)
 app.include_router(betslip_router.router)
 app.include_router(bet_status_router.router)
 app.include_router(league_or_tournament_router.router)
+app.include_router(player_or_team_router.router)
 
 @app.get("/")
 def root():

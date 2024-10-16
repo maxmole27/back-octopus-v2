@@ -56,7 +56,7 @@ def read_betslips(page: int = 0, limit: int = 10, start_date = None, end_date = 
 #     betslip_repo = BetslipRepository(db)
 #     return betslip_repo.create_betslip(betslip)
 
-@router.post("/", response_model=BetslipGet)
+@router.post("/", response_model=BetslipCreate)
 def create_betslip(betslip_data: BetslipCreate, db: Session = Depends(get_db)):
     # Inyectar repositorios y servicio
     betslip_repo = BetslipRepository(db)
