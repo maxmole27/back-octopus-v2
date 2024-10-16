@@ -23,15 +23,18 @@ class IndividualBet(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     betslip = relationship("Betslip", secondary='individual_bet_betslip' ,back_populates="individual_bets")
 
-    player_or_team1_id = Column(Integer, ForeignKey('player_or_teams.id'))
+    player_or_team1_id = Column(Integer, ForeignKey('player_or_teams.id'), nullable=True)
     player_or_team1 = relationship("PlayerOrTeam", back_populates="individual_bets1", foreign_keys=[player_or_team1_id])
-    player_or_team2_id = Column(Integer, ForeignKey('player_or_teams.id'))
+    player_or_team2_id = Column(Integer, ForeignKey('player_or_teams.id'), nullable=True)
     player_or_team2 = relationship("PlayerOrTeam", back_populates="individual_bets2", foreign_keys=[player_or_team2_id])
 
     type_of_bet = Column(String, nullable=False)
     specific_bet = Column(String, nullable=False)
 
-    # TODO: Falta la fecha de inicio del evento (opcional eso si)
+    event_date = Column(DateTime, nullable=True)
+
+    sport_id = Column(Integer, ForeignKey('sports.id'))
+    sport = relationship("Sport", back_populates="individual_bets")
 
     bet_status_id = Column(Integer, ForeignKey('bet_status.id'))
     bet_status = relationship("BetStatus", back_populates="individual_bets")

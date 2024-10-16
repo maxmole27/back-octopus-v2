@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 
 from ...database import get_db
 from ...shared.utils.constants import CODE_NO_MORE_DATA, CODE_OK
+from ..betslips.betslip_schemas import BetslipResponse
 from .system_repository import SystemRepository
-from .system_schemas import (BetslipResponse, SystemsCreate, SystemsGet,
-                             SystemsResponse)
+from .system_schemas import SystemsCreate, SystemsGet, SystemsResponse
 
 router = APIRouter(
     prefix="/systems",
@@ -19,8 +19,6 @@ def read_system(system_id: int, db = Depends(get_db)):
 
 @router.get("/", response_model=SystemsResponse)
 def read_systems(page: int = 0, limit: int = 10, db = Depends(get_db)):
-    print(page)
-    print(limit)
     system_repo = SystemRepository(db)
     systems = system_repo.get_systems(page=page, limit=limit)
     total = system_repo.count_systems()

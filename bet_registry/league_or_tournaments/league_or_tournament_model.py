@@ -1,4 +1,6 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from datetime import datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from ...database import Base
@@ -19,3 +21,5 @@ class LeagueOrTournament(Base):
 
     individual_bets = relationship("IndividualBet", back_populates="league_or_tournament")
 
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)

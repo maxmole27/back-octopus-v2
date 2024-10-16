@@ -18,7 +18,7 @@ class Sport(Base):
   systems = relationship("System", back_populates="sport_by_default")
   league_or_tournament = relationship("LeagueOrTournament", back_populates="sport")
   player_or_teams = relationship("PlayerOrTeam", back_populates="sport")
-
+  individual_bets = relationship("IndividualBet", back_populates="sport")
 
   class Config:
     from_attributes = True

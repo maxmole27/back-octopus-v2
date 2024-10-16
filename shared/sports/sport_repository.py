@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from . import sport_model, sport_schemas
@@ -16,8 +17,13 @@ class SportRepository:
     def get_sports(self, skip: int = 0, limit: int = 10) -> List[sport_model.Sport]:
         return self.db.query(sport_model.Sport).offset(skip).limit(limit).all()
 
-    def get_sports_raw(self) -> List[sport_model.Sport]:
-        return self.db.query(sport_model.Sport).limit(200).all()
+    def get_sports_raw(self, name: Optional[str] = None) -> List[sport_model.Sport]:
+        query = self.db.query(sport_model.Sport)
+        if name:
+            query = query.filter(sport_model.Sport.name.ilike(f"%{name}%"))
+
+        return query.limit(200).all()
+    
     
     def count_sports(self):
         return self.db.query(sport_model.Sport).count()

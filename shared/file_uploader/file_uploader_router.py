@@ -65,10 +65,11 @@ async def upload_image_and_extract_text(file: UploadFile = File()):
     completion = client.chat.completions.create(
       model="gpt-4o",
       messages=[
-        {"role": "system", "content": '''you will be an sports betting expert, and your role will be get bet slips screenshots. You must be able to extract and identify all the data about this bet slip. For example: the teams/players; is a parlay?; bet amount; odds; bet status, etc. You must return data in json format, as an array (in case of parlay). I will give you the data required with examples:
+        {"role": "system", "content": '''you will be an sports betting expert, and your role will be get bet slips screenshots. You must be able to extract and identify all the data about this bet slip. For example: the teams/players; is a parlay?; bet amount; odds; bet status, etc. You must return data in json format, as an array (even if it's just one bet). I will give you the data required with examples:
         sport: Tennis, Football, American Footbal, MMA, etc.
         team1: Manchester United, Novak Djokovic, Connor McGregor, Argentina
         team2: Same examples of "Team 1"
+        league_or_tournament: Premier League, Wimbledon, UFC, NHL, NBA, Copa América, etc.
         type_of_bet: Over/Under goals, over/under points, Handicap, 1x2, Moneyline, Over/Under Corners, Over/Under Cards, etc.
         specific_bet: Over 167.5 Points, Over 2.5 Goals, Under 9 innings, Over 12.5 corners, Manchester United +0.5, etc.
         odds: 1.83; 2.00; 1.32, etc
@@ -86,8 +87,6 @@ async def upload_image_and_extract_text(file: UploadFile = File()):
 
     responsex = sanitize_json_string(completion.choices[0].message.content)
 
-    print(responsex)
-    # tojson = json.loads(completion.choices[0].message.content)
     data = json.loads(responsex)
 
 

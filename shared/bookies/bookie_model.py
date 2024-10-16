@@ -16,6 +16,7 @@ class Bookie(Base):
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
   systems = relationship("System", back_populates="bookie_by_default")
+  betslips = relationship("Betslip", back_populates="bookie")
 
 
   class Config:

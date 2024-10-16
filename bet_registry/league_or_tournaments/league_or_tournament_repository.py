@@ -11,10 +11,13 @@ class LeagueOrTournamentRepository:
         return self.db.query(LeagueOrTournament).filter(
             LeagueOrTournament.id == league_or_tournament_id).first()
     
-    def get_league_or_tournaments_by_sport_raw(self, sport_id: int) -> list[LeagueOrTournamentGet]:
-        return self.db.query(LeagueOrTournament).filter(
-            LeagueOrTournament.sport_id == sport_id).all()
-        
+    def get_league_or_tournaments_by_sport_raw(self, name: str, sport_id: int) -> list[LeagueOrTournamentGet]:
+        query = self.db.query(LeagueOrTournament).filter(
+            LeagueOrTournament.sport_id == sport_id)
+        if name:
+            query = query.filter(LeagueOrTournament.name.ilike(f"%{name}%"))
+        return query.limit(200).all()
+    
   
     def create_league_or_tournament(self, league_or_tournament: LeagueOrTournamentCreate) -> LeagueOrTournamentGet:
         db_league_or_tournament = LeagueOrTournament(

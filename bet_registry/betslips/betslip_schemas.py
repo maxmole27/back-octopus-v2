@@ -12,12 +12,17 @@ class BetslipBase(BaseModel):
 
 class BetslipCreate(BetslipBase):
     individual_bets: List[IndividualBetCreate]
-
+    bookie_id: int
+    stake: float
+    money_stake: float
     class Config:
         from_attributes = True
 
 class BetslipGet(BetslipBase):
     id: int
+    bookie_id: int
+    stake: float
+    money_stake: float
     created_at: datetime
     updated_at: datetime
     individual_bets: List[IndividualBetGet]

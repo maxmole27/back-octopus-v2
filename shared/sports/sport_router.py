@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -29,9 +29,12 @@ def read_sports(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     )
 
 @router.get("/raw", response_model=List[SportGet])
-def read_sports_raw(db: Session = Depends(get_db)):
+def read_sports_raw(name: Optional[str] = None, db: Session = Depends(get_db)):
     sport_repo = SportRepository(db)
-    return sport_repo.get_sports_raw()
+    if name is None:
+        return sport_repo.get_sports_raw()
+    return sport_repo.get_sports_raw(name=name)
+        
 
 @router.post("/", response_model=SportGet)
 def create_sport(sport: SportCreate, db: Session = Depends(get_db)):

@@ -24,7 +24,7 @@ def read_betslip(betslip_id: int, db = Depends(get_db)):
 
 # Probably this route will be removed. It is not necessary to get all the betslips without a system_id
 @router.get("/", response_model=BetslipResponse)
-def read_betslips(page: int = 0, limit: int = 10, db = Depends(get_db)):
+def read_betslips(page: int = 0, limit: int = 10, start_date = None, end_date = None, team_name = None, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
     betslips = betslip_repo.get_betslips(page=page, limit=limit)
     total = betslip_repo.count_betslips(1)
@@ -56,7 +56,7 @@ def read_betslips(page: int = 0, limit: int = 10, db = Depends(get_db)):
 #     betslip_repo = BetslipRepository(db)
 #     return betslip_repo.create_betslip(betslip)
 
-@router.post("/", response_model=BetslipCreate)
+@router.post("/", response_model=BetslipGet)
 def create_betslip(betslip_data: BetslipCreate, db: Session = Depends(get_db)):
     # Inyectar repositorios y servicio
     betslip_repo = BetslipRepository(db)
@@ -66,7 +66,7 @@ def create_betslip(betslip_data: BetslipCreate, db: Session = Depends(get_db)):
     # Llamar al servicio para crear la Betslip
     new_betslip = betslip_service.create_betslip_with_individual_bets(
         betslip_data=betslip_data, 
-        individual_bets_data=betslip_data.individual_bets
+        individual_bets_data=betslip_data.individual_bets,
     )
     return new_betslip
 
@@ -82,11 +82,11 @@ def delete_betslip(betslip_id: int, db = Depends(get_db)):
     return betslip_repo.delete_betslip(betslip_id)
 
 @router.get("/system/{system_id}", response_model=BetslipResponse)
-def read_betslips_from_system(system_id: int, page: int = 0, limit: int = 10, db = Depends(get_db)):
+def read_betslips_from_system(system_id: int, page: int = 0, limit: int = 10, start_date = None, end_date = None, team_name = None, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
-    betslips = betslip_repo.get_betslips_from_system(system_id, page=page, limit=limit)
+    betslips = betslip_repo.get_betslips_from_system(system_id, page=page, limit=limit, start_date=start_date, end_date=end_date, team_name=team_name)
     
-    total = betslip_repo.count_betslips(system_id=system_id)
+    total = betslip_repo.count_betslips(system_id=system_id, )
     totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
 
     if page+1 > totalPages:
@@ -108,7 +108,5 @@ def read_betslips_from_system(system_id: int, page: int = 0, limit: int = 10, db
         message="Betslips retrieved successfully",
         code=CODE_OK
     )
-
-    print(response)
 
     return response

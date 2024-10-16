@@ -19,7 +19,16 @@ class SystemRepository:
     return result
   
   def create_system(self, system: SystemsCreate) -> SystemsGet:
-    db_system = System(name=system.name, description=system.description, image_url=system.image_url, is_backtesting=system.is_backtesting, stake_by_default=system.stake_by_default, bookie_by_default=system.bookie_by_default, sport_by_default=system.sport_by_default, owner_id=system.owner_id)
+    db_system = System(
+      name=system.name, 
+      description=system.description, 
+      image_url=system.image_url, 
+      is_backtesting=system.is_backtesting, 
+      stake_by_default=system.stake_by_default, 
+      bookie_by_default_id=system.bookie_by_default_id,
+      initial_bankroll=system.initial_bankroll,
+      sport_by_default_id=system.sport_by_default_id, 
+      owner_id=system.owner_id)
     self.db.add(db_system)
     self.db.commit()
     self.db.refresh(db_system)
@@ -33,8 +42,8 @@ class SystemRepository:
     db_system.is_backtesting = system.is_backtesting
     db_system.initial_bankroll = system.initial_bankroll
     db_system.stake_by_default = system.stake_by_default
-    db_system.bookie_by_default = system.bookie_by_default
-    db_system.sport_by_default = system.sport_by_default
+    db_system.bookie_by_default_id = system.bookie_by_default_id
+    db_system.sport_by_default_id = system.sport_by_default_id
     db_system.owner_id = system.owner_id
     self.db.commit()
     self.db.refresh(db_system)
