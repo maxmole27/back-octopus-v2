@@ -82,22 +82,6 @@ class BetslipRepository:
         self.db.refresh(db_betslip)
         return betslip
     
-    def insert_betslip(self, betslip: Betslip) -> Betslip:
-        individual_bet = IndividualBet()
-        individual_bet.bet_status = "pending"
-        individual_bet.type_of_bet = "single"
-        individual_bet.specific_bet = 1.5
-        individual_bet.odds = 2
-        individual_bet.player_or_team1_id = 1
-        individual_bet.player_or_team2_id = 2
-        individual_bet.league_or_tournament_id = 1
-
-        self.db.add(betslip)
-        self.db.commit()
-        self.db.refresh(betslip)
-      
-        return betslip
-    
     def count_betslips(self, system_id: int) -> int:
         return self.db.query(Betslip).filter(Betslip.system_id == system_id).count()
     
