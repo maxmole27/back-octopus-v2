@@ -9,7 +9,8 @@ from ..individual_bets.individual_bet_model import IndividualBet
 from ..player_or_teams.player_or_team_model import PlayerOrTeam
 from ..systems.system_model import System
 from .betslip_model import Betslip
-from .betslip_schemas import BetslipCreate, BetslipGet, BetslipResponse
+from .betslip_schemas import (BetslipCreate, BetslipGet, BetslipResponse,
+                              BetslipUpdate)
 
 
 class BetslipRepository:
@@ -81,6 +82,18 @@ class BetslipRepository:
         self.db.commit()
         self.db.refresh(db_betslip)
         return betslip
+    
+    def update_betslip(self, betslip_id: int, betslip: BetslipUpdate) -> Betslip:
+        print('wqdqweqw',betslip)
+        db_betslip = self.db.query(Betslip).filter(Betslip.id == betslip_id).first()
+        db_betslip.id = betslip.id
+        db_betslip.system_id = betslip.system_id
+        db_betslip.bookie_id = betslip.bookie_id
+        db_betslip.stake = betslip.stake
+        db_betslip.money_stake = betslip.money_stake
+        self.db.commit()
+        self.db.refresh(db_betslip)
+        return db_betslip
     
     def count_betslips(self, system_id: int) -> int:
         return self.db.query(Betslip).filter(Betslip.system_id == system_id).count()

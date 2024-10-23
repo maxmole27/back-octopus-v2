@@ -4,7 +4,8 @@ from typing import List
 from pydantic import BaseModel
 
 from ..individual_bets.individual_bet_schemas import (IndividualBetCreate,
-                                                      IndividualBetGet)
+                                                      IndividualBetGet,
+                                                      IndividualBetUpdate)
 
 
 class BetslipBase(BaseModel):
@@ -18,6 +19,14 @@ class BetslipCreate(BetslipBase):
     class Config:
         from_attributes = True
 
+class BetslipUpdate(BetslipBase):
+    id: int
+    individual_bets: List[IndividualBetUpdate]
+    bookie_id: int
+    stake: float
+    money_stake: float
+    class Config:
+        from_attributes = True
 class BetslipGet(BetslipBase):
     id: int
     bookie_id: int

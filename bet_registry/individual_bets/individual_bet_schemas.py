@@ -28,6 +28,21 @@ class IndividualBetCreate(IndividualBetBase):
     player_or_team2_str: Optional[str]
     league_or_tournament_str: Optional[str]
 
+class IndividualBetUpdate(BaseModel):
+    id: int
+    bet_status_id: int
+    event_date: Optional[datetime]
+    odds: float
+    league_or_tournament_id: Optional[int]
+    league_or_tournament_str: Optional[str]
+    player_or_team1_id: Optional[int]
+    player_or_team1_str: Optional[str]
+    player_or_team2_id: Optional[int]
+    player_or_team2_str: Optional[str]
+    specific_bet: str
+    sport_id: int
+    type_of_bet: str
+
 class IndividualBetGet(IndividualBetBase):
     id: int
     created_at: datetime
