@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from ..individual_bets.individual_bet_schemas import (IndividualBetCreate,
                                                       IndividualBetGet,
+                                                      IndividualBetResponse,
                                                       IndividualBetUpdate)
 
 
@@ -12,7 +13,7 @@ class BetslipBase(BaseModel):
     system_id: int
 
 class BetslipCreate(BetslipBase):
-    individual_bets: List[IndividualBetCreate]
+    individual_bets: List[IndividualBetResponse]
     bookie_id: int
     stake: float
     money_stake: float

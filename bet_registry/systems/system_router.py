@@ -45,12 +45,12 @@ def read_systems(page: int = 0, limit: int = 10, db = Depends(get_db)):
 
     return response
 
-@router.post("/", response_model=SystemsCreate)
+@router.post("/", response_model=SystemsGet)
 def create_system(system: SystemsCreate, db = Depends(get_db)):
     system_repo = SystemRepository(db)
     return system_repo.create_system(system)
 
-@router.put("/{system_id}", response_model=SystemsCreate)
+@router.put("/{system_id}", response_model=SystemsGet)
 def update_system(system_id: int, system: SystemsCreate, db = Depends(get_db)):
     system_repo = SystemRepository(db)
     return system_repo.update_system(system_id, system)

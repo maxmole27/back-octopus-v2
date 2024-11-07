@@ -15,7 +15,7 @@ class BetslipService:
         self.betslip_repo = betslip_repo
         self.individual_bet_repo = individual_bet_repo
 
-    def create_betslip_with_individual_bets(self, betslip_data: BetslipCreate, individual_bets_data: List[dict]) -> BetslipGet:
+    def create_betslip_with_individual_bets(self, betslip_data: BetslipCreate, individual_bets_data: List[dict]):
         try:
             # Crear la Betslip
             new_betslip = self.betslip_repo.create(betslip_data)
@@ -40,30 +40,38 @@ class BetslipService:
             raise e
         
     def update_betslip_with_individual_bets(self, betslip_id: int, betslip_data: BetslipUpdate, individual_bets_data: List[dict]) -> BetslipGet:
+        print("··················· ······ ····· ····· ····· ····· ····· · · · · ")
+        individual_betslips = []
         try:
             # Actualizar la Betslip
             updated_betslip = self.betslip_repo.update_betslip(betslip_id, betslip_data)
             # Actualizar las IndividualBet asociadas a la Betslip
             for bet_data in individual_bets_data:
-                self.individual_bet_repo.update(bet_data.id, bet_data)
+                if bet_data.id > -1:
+                    print("1.- UPDATE ··················· ······ ····· ····· ····· ····· ····· · · · · ")
+                    updated_bet = self.individual_bet_repo.update(bet_data.id, bet_data)
+                    individual_betslips.append(updated_bet)
+                else:
+                    new_individual_bet = self.individual_bet_repo.create(bet_data)
+                    print("2.- CREATE ··················· ······ ····· ····· ····· ····· ····· · · · · ")
+                    print(new_individual_bet)
+                    individual_betslips.append(new_individual_bet)
             # TODO: A veces no se cambian las individual bets, por ende hay que validar eso antes de hacer el delete y renovar las relaciones
             # Eliminar las relaciones anteriores
             self.db.query(IndividualBetBetslip).filter(IndividualBetBetslip.betslip_id == betslip_id).delete()
             # Crear las nuevas relaciones
-            for bet_data in individual_bets_data:
-                new_individual_bet = self.individual_bet_repo.create(bet_data)
+            for individual_bet in individual_betslips:
 
                 # Crear la relación en la tabla intermedia
                 individual_bet_betslip = IndividualBetBetslip(
-                    individual_bet_id=new_individual_bet.id,
+                    individual_bet_id=individual_bet.id,
                     betslip_id=updated_betslip.id
                 )
                 self.db.add(individual_bet_betslip)
             # Confirmar los cambios
             self.db.commit()
             self.db.refresh(updated_betslip)
-            print("wololoooooo")
-            print(updated_betslip.system.name)
+            print(updated_betslip)
 
             return updated_betslip
         except Exception as e:

@@ -29,7 +29,7 @@ def read_betslips(page: int = 0, limit: int = 10, start_date = None, end_date = 
     betslip_repo = BetslipRepository(db)
     betslips = betslip_repo.get_betslips(page=page, limit=limit)
     total = betslip_repo.count_betslips(1)
-    totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
+    totalPages = (total // limit) + 1
     if page+1 > totalPages:
         response = BetslipResponse(
             currentPage=page,
@@ -92,8 +92,12 @@ def read_betslips_from_system(system_id: int, page: int = 0, limit: int = 10, st
     betslip_repo = BetslipRepository(db)
     betslips = betslip_repo.get_betslips_from_system(system_id, page=page, limit=limit, start_date=start_date, end_date=end_date, team_name=team_name)
     
-    total = betslip_repo.count_betslips(system_id=system_id, )
+    total = betslip_repo.count_betslips(system_id=system_id)
+    print('total results', total)
     totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
+    print('total pages', totalPages)
+    print('limit', limit)
+
 
     if page+1 > totalPages:
         response = BetslipResponse(

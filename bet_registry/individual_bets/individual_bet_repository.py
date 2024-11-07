@@ -13,14 +13,14 @@ class IndividualBetRepository:
     def create(self, bet_data: dict) -> IndividualBet:
         # find id of player_or_team1_id and player_or_team2_id
         # if not found, create the entity
-
+        print('bet_data', bet_data)
         if bet_data.player_or_team1_id is None or bet_data.player_or_team1_id == -1:
             # create the entity, but first, we have to check if string name is already in the database
             check_if_exists_player1 = self.db.query(PlayerOrTeam).filter(
-                PlayerOrTeam.name.ilike(f"%{bet_data.name}%")).filter(PlayerOrTeam.sport_id == bet_data.sport_id).first()
+                    PlayerOrTeam.name.ilike(f"%{bet_data.player_or_team1_str}%")).filter(PlayerOrTeam.sport_id == bet_data.sport_id).first()
             if check_if_exists_player1 is not None:
-                print('check_if_exists_player1', check_if_exists_player1.name)
                 bet_data.player_or_team1_id = check_if_exists_player1.id
+                bet_data.player_or_team1_str = check_if_exists_player1.name
             else:
                 new_player_or_team1 = PlayerOrTeam(
                 name=bet_data.player_or_team1_str,
@@ -29,6 +29,7 @@ class IndividualBetRepository:
                 self.db.add(new_player_or_team1)
                 self.db.flush()
                 bet_data.player_or_team1_id = new_player_or_team1.id
+                bet_data.player_or_team1_str = new_player_or_team1.name
             
         if bet_data.player_or_team2_id is None or bet_data.player_or_team2_id == -1:
             # create the entity but first, we have to check if string name is already in the database
@@ -38,6 +39,7 @@ class IndividualBetRepository:
 
             if check_if_exists_player2 is not None:
                 bet_data.player_or_team2_id = check_if_exists_player2.id
+                bet_data.player_or_team2_str = check_if_exists_player2.name
             else:
                 new_player_or_team2 = PlayerOrTeam(
                     name=bet_data.player_or_team2_str,
@@ -46,6 +48,7 @@ class IndividualBetRepository:
                 self.db.add(new_player_or_team2)
                 self.db.flush()
                 bet_data.player_or_team2_id = new_player_or_team2.id
+                bet_data.player_or_team2_str = new_player_or_team2.name
 
         if bet_data.league_or_tournament_id is None or bet_data.league_or_tournament_id == -1:
             # create the entity
@@ -211,3 +214,7 @@ class IndividualBetRepository:
         self.db.commit()
 
         return updated_bet
+    
+    def delete(self, bet_id: int):
+        self.db.query(IndividualBet).filter(IndividualBet.id == bet_id).delete()
+        self.db.commit()

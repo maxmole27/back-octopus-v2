@@ -70,8 +70,9 @@ class BetslipRepository:
             )
 
         # Paginación
-        query = query.offset(page * limit).limit(limit)
+        query = query.distinct(Betslip.id).offset(page * limit).limit(limit)
         
+        print('query', query)
         betslips = query.all()
         return betslips
 

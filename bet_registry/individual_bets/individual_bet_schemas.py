@@ -28,6 +28,15 @@ class IndividualBetCreate(IndividualBetBase):
     player_or_team2_str: Optional[str]
     league_or_tournament_str: Optional[str]
 
+class IndividualBetResponse(IndividualBetBase):
+    player_or_team1_str: Optional[str] = None
+    player_or_team2_str: Optional[str] = None
+    league_or_tournament_str: Optional[str] = None
+    bet_status_id: int
+    
+    class Config:
+        from_attributes = True
+
 class IndividualBetUpdate(BaseModel):
     id: int
     bet_status_id: int
