@@ -1,6 +1,6 @@
 
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy.sql.expression import and_, or_
@@ -39,44 +39,52 @@ class BetslipRepository:
         system_id: int, 
         page: int, 
         limit: int, 
-        start_date: Optional[datetime] = None, 
-        end_date: Optional[datetime] = None, 
+        start_date: Optional[str] = None, 
+        end_date: Optional[str] = None, 
         team_name: Optional[str] = None
-    ) -> List[Betslip]:
-        # Crear alias para player_or_team1 y player_or_team2
+    ) -> Tuple[List[Betslip], int]:
+
+        # Crear alias para evitar duplicación en los joins
         PlayerOrTeam1 = aliased(PlayerOrTeam)
         PlayerOrTeam2 = aliased(PlayerOrTeam)
 
-        query = self.db.query(Betslip).join(Betslip.individual_bets)
-
-        # Join con los alias de PlayerOrTeam para evitar duplicación
-        query = query.join(PlayerOrTeam1, IndividualBet.player_or_team1)
-        query = query.join(PlayerOrTeam2, IndividualBet.player_or_team2)
+        # Construir consulta base con filtros aplicados
+        base_query = self.db.query(Betslip).join(Betslip.individual_bets)
+        base_query = base_query.join(PlayerOrTeam1, IndividualBet.player_or_team1)
+        base_query = base_query.join(PlayerOrTeam2, IndividualBet.player_or_team2)
 
         # Filtro por sistema
-        query = query.filter(Betslip.system_id == system_id)
+        base_query = base_query.filter(Betslip.system_id == system_id)
         
+        # Procesar fechas
+        if start_date:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        if end_date:
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
+
         # Filtro por rango de fechas
         if start_date and end_date:
-            query = query.filter(and_(Betslip.created_at >= start_date, Betslip.created_at <= end_date))
-        
+            base_query = base_query.filter(and_(Betslip.created_at >= start_date, Betslip.created_at <= end_date))
+
         # Filtro por nombre de equipo o jugador usando los alias
         if team_name:
-            query = query.filter(
+            base_query = base_query.filter(
                 or_(
                     PlayerOrTeam1.name.ilike(f"%{team_name}%"),
                     PlayerOrTeam2.name.ilike(f"%{team_name}%")
                 )
             )
 
-        # Paginación
-        query = query.distinct(Betslip.id).offset(page * limit).limit(limit)
-        
-        print('query', query)
-        betslips = query.all()
-        return betslips
+        # Obtener el total de registros aplicando los filtros, pero sin paginación
+        total_count = base_query.distinct(Betslip.id).count()
 
-    
+        # Aplicar paginación en la consulta para obtener los registros paginados
+        paginated_query = base_query.distinct(Betslip.id).offset(page * limit).limit(limit)
+        betslips = paginated_query.all()
+
+        return betslips, total_count
+
+        
     def create_betslip(self, betslip: BetslipCreate) -> Betslip:
         db_betslip = Betslip(system_id=betslip.system_id)
         self.db.add(db_betslip)

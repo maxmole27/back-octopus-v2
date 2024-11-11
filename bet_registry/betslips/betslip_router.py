@@ -90,13 +90,11 @@ def delete_betslip(betslip_id: int, db = Depends(get_db)):
 @router.get("/system/{system_id}", response_model=BetslipResponse)
 def read_betslips_from_system(system_id: int, page: int = 0, limit: int = 10, start_date = None, end_date = None, team_name = None, db = Depends(get_db)):
     betslip_repo = BetslipRepository(db)
-    betslips = betslip_repo.get_betslips_from_system(system_id, page=page, limit=limit, start_date=start_date, end_date=end_date, team_name=team_name)
+    betslip_repo_res = betslip_repo.get_betslips_from_system(system_id, page=page, limit=limit, start_date=start_date, end_date=end_date, team_name=team_name)
+    betslips = betslip_repo_res[0]
     
-    total = betslip_repo.count_betslips(system_id=system_id)
-    print('total results', total)
+    total = betslip_repo_res[1]
     totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
-    print('total pages', totalPages)
-    print('limit', limit)
 
 
     if page+1 > totalPages:
