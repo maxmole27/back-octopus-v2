@@ -41,7 +41,8 @@ class BetslipRepository:
         limit: int, 
         start_date: Optional[str] = None, 
         end_date: Optional[str] = None, 
-        team_name: Optional[str] = None
+        team_name: Optional[str] = None,
+        sport_list: Optional[List[int]] = None
     ) -> Tuple[List[Betslip], int]:
 
         # Crear alias para evitar duplicación en los joins
@@ -65,6 +66,10 @@ class BetslipRepository:
         # Filtro por rango de fechas
         if start_date and end_date:
             base_query = base_query.filter(and_(Betslip.created_at >= start_date, Betslip.created_at <= end_date))
+
+        # Filtro por deportes
+        if sport_list:
+            base_query = base_query.filter(IndividualBet.sport_id.in_(sport_list))
 
         # Filtro por nombre de equipo o jugador usando los alias
         if team_name:
