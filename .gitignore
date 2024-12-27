@@ -70,3 +70,8 @@ dist/
 *.tmp
 
 static/
+data/
+
+# Environments
+.env
+*.env
