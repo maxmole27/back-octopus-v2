@@ -14,8 +14,8 @@ pytesseract = "*"
 pillow = "*"
 load-dotenv = "*"
 python-dotenv = "*"
-openai = "*"
 fastapi = {extras = ["standard"], version = "*"}
+openai = "*"
 
 [dev-packages]
 
