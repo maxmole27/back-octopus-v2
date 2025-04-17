@@ -19,10 +19,13 @@ class SystemRepository:
     return result
   
   def create_system(self, system: SystemsCreate) -> SystemsGet:
+    
+    system_img_url = system.image_url if system.image_url else '/none.png'
+
     db_system = System(
       name=system.name, 
       description=system.description, 
-      image_url=system.image_url, 
+      image_url= system_img_url, 
       is_backtesting=system.is_backtesting, 
       stake_by_default=system.stake_by_default, 
       bookie_by_default_id=system.bookie_by_default_id,

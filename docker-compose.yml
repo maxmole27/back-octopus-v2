@@ -1,7 +1,7 @@
-version: '3'
 services:
   db:
     image: postgres
+    container_name: octopus_db
     restart: always
     environment:
       POSTGRES_USER: octopus_test
@@ -10,4 +10,5 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      # point to 5422
+      - "5422:5432"
