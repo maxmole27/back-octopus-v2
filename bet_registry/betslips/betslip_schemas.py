@@ -20,14 +20,17 @@ class BetslipCreate(BetslipBase):
     class Config:
         from_attributes = True
 
-class BetslipUpdate(BetslipBase):
-    id: int
+class BetslipUpdate(BaseModel):
+    system_id: int
     individual_bets: List[IndividualBetUpdate]
     bookie_id: int
     stake: float
     money_stake: float
     class Config:
         from_attributes = True
+
+class BetslipUpdateCompleted(BetslipUpdate):
+    betslip_id: int
 class BetslipGet(BetslipBase):
     id: int
     bookie_id: int

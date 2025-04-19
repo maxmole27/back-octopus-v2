@@ -9,7 +9,7 @@ from ...shared.utils.constants import CODE_NO_MORE_DATA, CODE_OK
 from ..individual_bets.individual_bet_repository import IndividualBetRepository
 from .betslip_repository import BetslipRepository
 from .betslip_schemas import (BetslipCreate, BetslipGet, BetslipResponse,
-                              BetslipUpdate)
+                              BetslipUpdate, BetslipUpdateCompleted)
 from .betslip_service import BetslipService
 
 router = APIRouter(
@@ -78,7 +78,18 @@ def update_betslip(betslip_id: int, betslip_data: BetslipUpdate, db = Depends(ge
     individual_bet_repo = IndividualBetRepository(db)
     betslip_service = BetslipService(db, betslip_repo, individual_bet_repo)
 
-    new_betslip = betslip_service.update_betslip_with_individual_bets(betslip_id, betslip_data, betslip_data.individual_bets)
+    formatted_betslip = BetslipUpdateCompleted(
+        betslip_id=betslip_id,
+        system_id=betslip_data.system_id,
+        bookie_id=betslip_data.bookie_id,
+        stake=betslip_data.stake,
+        money_stake=betslip_data.money_stake,
+        individual_bets=betslip_data.individual_bets
+    )
+
+    print("formatted_betslip", formatted_betslip)
+
+    new_betslip = betslip_service.update_betslip_with_individual_bets(formatted_betslip)
 
     return new_betslip
 

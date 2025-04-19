@@ -7,10 +7,8 @@ from sqlalchemy.sql.expression import and_, or_
 
 from ..individual_bets.individual_bet_model import IndividualBet
 from ..player_or_teams.player_or_team_model import PlayerOrTeam
-from ..systems.system_model import System
 from .betslip_model import Betslip
-from .betslip_schemas import (BetslipCreate, BetslipGet, BetslipResponse,
-                              BetslipUpdate)
+from .betslip_schemas import BetslipCreate, BetslipUpdateCompleted
 
 
 class BetslipRepository:
@@ -97,10 +95,10 @@ class BetslipRepository:
         self.db.refresh(db_betslip)
         return betslip
     
-    def update_betslip(self, betslip_id: int, betslip: BetslipUpdate) -> Betslip:
+    def update_betslip(self, betslip: BetslipUpdateCompleted) -> Betslip:
         print('wqdqweqw',betslip)
-        db_betslip = self.db.query(Betslip).filter(Betslip.id == betslip_id).first()
-        db_betslip.id = betslip.id
+        db_betslip = self.db.query(Betslip).filter(Betslip.id == betslip.betslip_id).first()
+        db_betslip.id = betslip.betslip_id
         db_betslip.system_id = betslip.system_id
         db_betslip.bookie_id = betslip.bookie_id
         db_betslip.stake = betslip.stake
