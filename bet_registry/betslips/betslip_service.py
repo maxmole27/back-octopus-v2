@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from ..individual_bets.individual_bet_model import IndividualBetBetslip
 from ..individual_bets.individual_bet_repository import IndividualBetRepository
 from .betslip_model import Betslip
-from .betslip_repository import BetslipGet, BetslipRepository
-from .betslip_schemas import BetslipCreate, BetslipUpdateCompleted
+from .betslip_repository import BetslipRepository
+from .betslip_schemas import BetslipCreate, BetslipGet, BetslipUpdateCompleted
 
 
 class BetslipService:
