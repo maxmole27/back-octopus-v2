@@ -1,8 +1,7 @@
+from typing import Optional
+
 from sqlalchemy.orm import joinedload
 
-from ..betslips.betslip_model import Betslip
-from ..betslips.betslip_repository import BetslipRepository
-from ..betslips.betslip_schemas import BetslipResponse
 from .system_model import System
 from .system_schemas import SystemsCreate, SystemsGet, SystemsResponse
 
@@ -14,8 +13,11 @@ class SystemRepository:
   def get_system(self, system_id: int) -> System:
     return self.db.query(System).filter(System.id == system_id).first()
   
-  def get_systems(self, page: int, limit: int)-> list[SystemsGet]:
-    result = self.db.query(System).offset(page*limit).limit(limit).all()
+  def get_systems(self, page: int, limit: int, system_name: Optional[str])-> list[SystemsGet]:
+    base_query = self.db.query(System)
+    if system_name:
+      base_query = base_query.filter(System.name.ilike(f"%{system_name}%"))
+    result = base_query.offset(page*limit).limit(limit).all()
     return result
   
   def create_system(self, system: SystemsCreate) -> SystemsGet:
@@ -61,8 +63,5 @@ class SystemRepository:
   def count_systems(self) -> int:
     return self.db.query(System).count()
   
-  # def get_systems_by_owner(self, owner_id: int, page: int, limit: int) -> list[SystemsGet]:
-  #   result = self.db.query(System).filter(System.owner_id == owner_id).offset(page*limit).limit(limit).all()
-  #   return result
   
  

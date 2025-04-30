@@ -18,9 +18,9 @@ def read_system(system_id: int, db = Depends(get_db)):
     return system_repo.get_system(system_id)
 
 @router.get("/", response_model=SystemsResponse)
-def read_systems(page: int = 0, limit: int = 10, db = Depends(get_db)):
+def read_systems(page: int = 0, limit: int = 10, system_name = None ,db = Depends(get_db)):
     system_repo = SystemRepository(db)
-    systems = system_repo.get_systems(page=page, limit=limit)
+    systems = system_repo.get_systems(page=page, limit=limit, system_name=system_name)
     total = system_repo.count_systems()
     totalPages = (total // limit) + 1 if total % limit > 0 else total // limit
     if page+1 > totalPages:

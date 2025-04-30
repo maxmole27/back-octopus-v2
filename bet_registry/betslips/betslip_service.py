@@ -54,7 +54,6 @@ class BetslipService:
                 print("2.- CREATE ··················· ······ ····· ····· ····· ····· ····· · · · · ")
                 print(new_individual_bet)
                 individual_betslips.append(new_individual_bet)
-        # TODO: A veces no se cambian las individual bets, por ende hay que validar eso antes de hacer el delete y renovar las relaciones
         # Eliminar las relaciones anteriores
         self.db.query(IndividualBetBetslip).filter(IndividualBetBetslip.betslip_id == betslip_data.betslip_id).delete()
         # Crear las nuevas relaciones
